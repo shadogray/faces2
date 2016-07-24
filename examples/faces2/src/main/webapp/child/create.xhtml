@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="/resources/scaffold/pageTemplate.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="id" value='#{childBean.id}'/>
+		<f:event type="preRenderView" listener='#{childBean.retrieve}'/>
+	</f:metadata>
+
+	<ui:param name="pageTitle" value="Create Child"/>
+
+	<ui:define name="header">
+		Child
+	</ui:define>
+
+	<ui:define name="subheader">
+		<c:choose>
+			<c:when test='#{!empty childBean.id}'>
+				Edit existing Child
+			</c:when>
+			<c:otherwise>
+				Create a new Child
+			</c:otherwise>
+		</c:choose>
+	</ui:define>
+
+	<ui:define name="footer"/>
+
+	<ui:define name="main">
+		<h:form id="create">
+			<h:messages globalOnly="true" styleClass="error"/>
+
+			<h:panelGrid columnClasses="label,component,required" columns="3">
+				<h:outputLabel for="childBeanChildParent" value="Parent:"/>
+				<h:panelGroup>
+					<h:selectOneMenu converter="#{parentConverter}" id="childBeanChildParent" value="#{childBean.child.parent}" >
+						<f:selectItem/>
+						<f:selectItems itemLabel="#{_item}" itemValue="#{_item}" value="#{parentBean.all}" var="_item" />
+					</h:selectOneMenu>
+					<h:message for="childBeanChildParent" styleClass="error"/>
+				</h:panelGroup>
+				<h:outputText/>
+				<h:outputLabel for="childBeanChildName" value="Name:"/>
+				<h:panelGroup>
+					<h:inputText id="childBeanChildName" value="#{childBean.child.name}"/>
+					<h:message for="childBeanChildName" styleClass="error"/>
+				</h:panelGroup>
+				<h:outputText/>
+			</h:panelGrid>
+
+			<div class="buttons">
+				<h:commandLink value="Save" action='#{childBean.update}' styleClass="btn btn-primary"/>
+				<c:choose>
+					<c:when test='#{!empty childBean.id}'>
+						<h:link value="Cancel" outcome="view" styleClass="btn btn-primary">
+							<f:param name="id" value='#{childBean.id}'/>
+						</h:link>
+						<h:commandLink value="Delete" action='#{childBean.delete}' styleClass="btn btn-primary"/>
+					</c:when>
+					<c:otherwise>
+						<h:link value="Cancel" outcome="search" styleClass="btn btn-primary"/>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
